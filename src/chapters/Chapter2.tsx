@@ -233,20 +233,19 @@ function CakeScene({ onDone }: { onDone: () => void }) {
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   transition={{ type: 'spring', stiffness: 100, damping: 10 }}
                 >
-                  <GiftBagDoodle />
+                  <GiftBagDoodle>
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.5 }}
+                      className="absolute bottom-3 left-1/2 -translate-x-1/2 z-10"
+                    >
+                      <ContinueButton onClick={onDone} />
+                    </motion.div>
+                  </GiftBagDoodle>
                 </motion.div>
               )}
             </AnimatePresence>
-
-            {showGiftBag && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.5 }}
-              >
-                <ContinueButton onClick={onDone} />
-              </motion.div>
-            )}
           </div>
         )}
       </div>
@@ -302,25 +301,28 @@ function ContinueButton({ onClick, label = 'Okay... continue 🎁' }: { onClick:
   );
 }
 
-function GiftBagDoodle() {
+function GiftBagDoodle({ children }: { children?: React.ReactNode }) {
   return (
-    <svg viewBox="0 0 120 140" width="100" height="120" fill="none" stroke="#2a1d15" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
-      {/* Bag body */}
-      <path d="M25 50 L20 130 Q20 135 25 135 L95 135 Q100 135 100 130 L95 50 Z" fill="#f8b8cd" />
-      {/* Bag opening */}
-      <path d="M25 50 Q35 45 40 50 Q50 45 55 50 Q65 45 70 50 Q80 45 85 50 Q90 45 95 50" fill="none" strokeWidth={2} />
-      {/* Handles */}
-      <path d="M35 50 Q35 25 60 25 Q85 25 85 50" fill="none" strokeWidth={2} />
-      {/* Gift tag */}
-      <rect x="50" y="65" width="25" height="18" rx="2" fill="#fde8ee" />
-      <line x1="50" y1="74" x2="75" y2="74" stroke="#e8617e" strokeWidth={1} />
-      <line x1="55" y1="70" x2="70" y2="70" stroke="#e8617e" strokeWidth={1} />
-      <line x1="55" y1="78" x2="70" y2="78" stroke="#e8617e" strokeWidth={1} />
-      {/* Confetti dots on bag */}
-      <circle cx="40" cy="90" r="3" fill="#ecd69b" stroke="none" />
-      <circle cx="70" cy="100" r="3" fill="#5d3a7a" stroke="none" />
-      <circle cx="55" cy="115" r="3" fill="#e8617e" stroke="none" />
-    </svg>
+    <div className="relative" style={{ width: 100, height: 120 }}>
+      <svg viewBox="0 0 120 140" width="100" height="120" fill="none" stroke="#2a1d15" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" className="absolute inset-0">
+        {/* Bag body */}
+        <path d="M25 50 L20 130 Q20 135 25 135 L95 135 Q100 135 100 130 L95 50 Z" fill="#f8b8cd" />
+        {/* Bag opening */}
+        <path d="M25 50 Q35 45 40 50 Q50 45 55 50 Q65 45 70 50 Q80 45 85 50 Q90 45 95 50" fill="none" strokeWidth={2} />
+        {/* Handles */}
+        <path d="M35 50 Q35 25 60 25 Q85 25 85 50" fill="none" strokeWidth={2} />
+        {/* Gift tag */}
+        <rect x="50" y="65" width="25" height="18" rx="2" fill="#fde8ee" />
+        <line x1="50" y1="74" x2="75" y2="74" stroke="#e8617e" strokeWidth={1} />
+        <line x1="55" y1="70" x2="70" y2="70" stroke="#e8617e" strokeWidth={1} />
+        <line x1="55" y1="78" x2="70" y2="78" stroke="#e8617e" strokeWidth={1} />
+        {/* Confetti dots on bag */}
+        <circle cx="40" cy="90" r="3" fill="#ecd69b" stroke="none" />
+        <circle cx="70" cy="100" r="3" fill="#5d3a7a" stroke="none" />
+        <circle cx="55" cy="115" r="3" fill="#e8617e" stroke="none" />
+      </svg>
+      {children}
+    </div>
   );
 }
 
