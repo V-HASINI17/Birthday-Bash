@@ -2,12 +2,13 @@ import { StoryProvider, useStory, type Chapter } from '@/story/StoryContext';
 import IntroChapter from '@/chapters/IntroChapter';
 import Chapter2 from '@/chapters/Chapter2';
 import Chapter3 from '@/chapters/Chapter3';
+import Chapter4 from '@/chapters/Chapter4';
 
 const chapterComponents: Record<Chapter, React.ComponentType | null> = {
   intro: IntroChapter,
   chapter2: Chapter2,
   chapter3: Chapter3,
-  chapter4: null,
+  chapter4: Chapter4,
   chapter5: null,
   chapter6: null,
   finale: null,
