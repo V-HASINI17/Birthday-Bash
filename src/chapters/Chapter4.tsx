@@ -236,7 +236,7 @@ function MemoryWallScene({ onNext }: { onNext: () => void }) {
   }, []);
 
   return (
-    <div className="relative min-h-[100dvh] paper-texture paper-grain flex flex-col items-center justify-center px-4 py-10 overflow-hidden">
+    <div className="relative min-h-[100dvh] paper-texture paper-grain flex flex-col items-center px-4 py-10 overflow-x-hidden overflow-y-auto">
       <HeartAnimation count={4} duration={6} />
 
       <Doodle variant="flower" className="absolute top-6 left-6 animate-float-slow" />
