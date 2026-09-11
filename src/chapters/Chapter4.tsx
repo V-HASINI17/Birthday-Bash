@@ -90,17 +90,18 @@ function ChildhoodPhotoScene({ onNext }: { onNext: () => void }) {
           )}
         </AnimatePresence>
 
-        {showPhoto && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            className="flex justify-center mt-4"
-          >
-            <NextButton onClick={onNext} />
-          </motion.div>
-        )}
       </div>
+
+      {showPhoto && (
+        <motion.div
+          initial={{ opacity: 0, x: 40 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.5 }}
+          className="absolute right-6 top-1/2 -translate-y-1/2 z-20"
+        >
+          <NextButton onClick={onNext} />
+        </motion.div>
+      )}
     </div>
   );
 }
