@@ -28,7 +28,7 @@ export default function Chapter4() {
         )}
 
         {state.scene === 'memories' && (
-          <PageTransition key="memories" sceneKey="memories" variant="scrapbook" className="absolute inset-0">
+          <PageTransition key="memories" sceneKey="memories" variant="scrapbook" className="absolute inset-0 overflow-y-auto">
             <MemoryWallScene onNext={() => goTo('chapter3', 'list')} />
           </PageTransition>
         )}
@@ -236,7 +236,7 @@ function MemoryWallScene({ onNext }: { onNext: () => void }) {
   }, []);
 
   return (
-    <div className="relative min-h-[100dvh] paper-texture paper-grain flex flex-col items-center px-4 py-10 overflow-x-hidden overflow-y-auto">
+    <div className="relative min-h-[100dvh] paper-texture paper-grain flex flex-col items-center px-4 py-10">
       <HeartAnimation count={4} duration={6} />
 
       <Doodle variant="flower" className="absolute top-6 left-6 animate-float-slow" />
