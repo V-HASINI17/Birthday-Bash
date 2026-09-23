@@ -7,7 +7,6 @@ import CuteCharacter from '@/components/CuteCharacter';
 import HeartAnimation from '@/components/HeartAnimation';
 import Polaroid from '@/components/Polaroid';
 import PhotoPlaceholder from '@/components/PhotoPlaceholder';
-import { ImagePlus } from 'lucide-react';
 
 export default function Chapter4() {
   const { state, nextScene, goTo } = useStory();
@@ -30,6 +29,30 @@ export default function Chapter4() {
         {state.scene === 'memories' && (
           <PageTransition key="memories" sceneKey="memories" variant="scrapbook" className="absolute inset-0 overflow-y-auto">
             <MemoryWallScene onNext={() => goTo('chapter3', 'list')} />
+          </PageTransition>
+        )}
+
+        {state.scene === 'gift2' && (
+          <PageTransition key="gift2" sceneKey="gift2" variant="scrapbook" className="absolute inset-0">
+            <TravelIntroScene onNext={() => nextScene('gift2-puri')} />
+          </PageTransition>
+        )}
+
+        {state.scene === 'gift2-puri' && (
+          <PageTransition key="gift2-puri" sceneKey="gift2-puri" variant="scrapbook" className="absolute inset-0 overflow-y-auto">
+            <TravelScrapbookScene
+              section="puri"
+              onNext={() => nextScene('gift2-pondicherry')}
+            />
+          </PageTransition>
+        )}
+
+        {state.scene === 'gift2-pondicherry' && (
+          <PageTransition key="gift2-pondicherry" sceneKey="gift2-pondicherry" variant="scrapbook" className="absolute inset-0 overflow-y-auto">
+            <TravelScrapbookScene
+              section="pondicherry"
+              onNext={() => goTo('chapter3', 'list')}
+            />
           </PageTransition>
         )}
       </AnimatePresence>
@@ -309,6 +332,331 @@ function MemoryWallScene({ onNext }: { onNext: () => void }) {
         )}
       </div>
     </div>
+  );
+}
+
+// ─── Gift 2 Scene 1: Travel Intro ───────────────────────────────────
+
+function TravelIntroScene({ onNext }: { onNext: () => void }) {
+  const [showText, setShowText] = useState(false);
+  const [showSuitcase, setShowSuitcase] = useState(false);
+  const [openSuitcase, setOpenSuitcase] = useState(false);
+
+  useEffect(() => {
+    const t1 = setTimeout(() => setShowText(true), 300);
+    const t2 = setTimeout(() => setShowSuitcase(true), 1400);
+    const t3 = setTimeout(() => setOpenSuitcase(true), 2600);
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
+    };
+  }, []);
+
+  return (
+    <div className="relative min-h-[100dvh] paper-texture paper-grain flex flex-col items-center justify-center px-6 py-10 overflow-hidden">
+      <HeartAnimation count={6} duration={5} />
+
+      <Doodle variant="star" className="absolute top-8 left-8 animate-float-slow" />
+      <Doodle variant="heart" className="absolute top-12 right-8 animate-float-medium" />
+      <Doodle variant="flower" className="absolute bottom-12 left-10 animate-float-slow" />
+
+      <div className="relative z-10 flex flex-col items-center gap-8 text-center w-full max-w-md">
+        <AnimatePresence>
+          {showText && (
+            <motion.div
+              initial={{ opacity: 0, y: 30, filter: 'blur(10px)' }}
+              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+              transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+              className="flex flex-col items-center gap-3"
+            >
+              <p className="font-hand text-2xl sm:text-3xl text-wine-500 leading-snug">
+                So , You would love 🧳 travelling...
+              </p>
+              <p className="font-hand text-xl sm:text-2xl text-ink-600 leading-snug">
+                Make a bump of photo yuh travelled Without me 😒 and still enjoyed 😒😮‍💨
+              </p>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <AnimatePresence>
+          {showSuitcase && (
+            <motion.div
+              initial={{ opacity: 0, x: -120, rotate: -15 }}
+              animate={{ opacity: 1, x: 0, rotate: 0 }}
+              transition={{ type: 'spring', stiffness: 80, damping: 10 }}
+              className="relative"
+            >
+              <Suitcase open={openSuitcase} />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {openSuitcase && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+          >
+            <NextButton onClick={onNext} label="Open album 📖" />
+          </motion.div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ─── Gift 2 Scene 2: Travel Scrapbook ──────────────────────────────
+
+interface TravelPhoto {
+  label: string;
+  caption: string;
+  aspect: 'square' | 'portrait' | 'landscape';
+}
+
+interface TravelSection {
+  id: 'puri' | 'pondicherry';
+  title: string;
+  emoji: string;
+  stamp: string;
+  photos: TravelPhoto[];
+}
+
+const TRAVEL_SECTIONS: Record<'puri' | 'pondicherry', TravelSection> = {
+  puri: {
+    id: 'puri',
+    title: 'Puri',
+    emoji: '📍',
+    stamp: 'PURI ✦ Sea & Sand',
+    photos: [
+      { label: 'Puri photo 1', caption: 'Beach day 🌊', aspect: 'landscape' },
+      { label: 'Puri photo 2', caption: 'Sunset 🌅', aspect: 'portrait' },
+      { label: 'Puri photo 3', caption: 'Temple visit 🛕', aspect: 'square' },
+      { label: 'Puri photo 4', caption: 'Sea waves 🐚', aspect: 'landscape' },
+      { label: 'Puri photo 5', caption: 'Together 🤍', aspect: 'portrait' },
+      { label: 'Puri photo 6', caption: 'Street food 🍢', aspect: 'square' },
+      { label: 'Puri photo 7', caption: 'Golden hour ✨', aspect: 'landscape' },
+    ],
+  },
+  pondicherry: {
+    id: 'pondicherry',
+    title: 'Pondicherry',
+    emoji: '📍',
+    stamp: 'PONDICHERRY ✦ French Town',
+    photos: [
+      { label: 'Pondy photo 1', caption: 'French quarter 🏠', aspect: 'landscape' },
+      { label: 'Pondy photo 2', caption: 'Café hop ☕', aspect: 'square' },
+      { label: 'Pondy photo 3', caption: 'Beach walk 🌊', aspect: 'portrait' },
+      { label: 'Pondy photo 4', caption: 'Auroville 🌿', aspect: 'landscape' },
+      { label: 'Pondy photo 5', caption: 'Sunrise 🌄', aspect: 'portrait' },
+      { label: 'Pondy photo 6', caption: 'Cycle ride 🚲', aspect: 'square' },
+      { label: 'Pondy photo 7', caption: 'Old streets 🏛️', aspect: 'landscape' },
+      { label: 'Pondy photo 8', caption: 'Best trip 💛', aspect: 'portrait' },
+    ],
+  },
+};
+
+const TRAVEL_TAPE_COLORS = ['pink', 'yellow', 'purple'] as const;
+const TRAVEL_TAPE_POSITIONS = ['top-left', 'top-right', 'top-center'] as const;
+
+function TravelScrapbookScene({
+  section,
+  onNext,
+}: {
+  section: 'puri' | 'pondicherry';
+  onNext: () => void;
+}) {
+  const data = TRAVEL_SECTIONS[section];
+  const [visibleCount, setVisibleCount] = useState(0);
+  const [allDone, setAllDone] = useState(false);
+
+  useEffect(() => {
+    const timers: ReturnType<typeof setTimeout>[] = [];
+    for (let i = 0; i < data.photos.length; i++) {
+      timers.push(setTimeout(() => setVisibleCount(i + 1), 400 + i * 300));
+    }
+    timers.push(setTimeout(() => setAllDone(true), 400 + data.photos.length * 300 + 600));
+    return () => timers.forEach(clearTimeout);
+  }, [data.photos.length]);
+
+  return (
+    <div className="relative min-h-[100dvh] paper-texture paper-grain flex flex-col items-center px-4 py-10">
+      <HeartAnimation count={4} duration={6} />
+
+      <Doodle variant="star" className="absolute top-6 left-6 animate-float-slow" />
+      <Doodle variant="heart" className="absolute top-8 right-8 animate-float-medium" />
+      <Doodle variant="flower" className="absolute bottom-8 right-10 animate-float-slow" />
+
+      <div className="relative z-10 flex flex-col items-center gap-6 w-full max-w-md">
+        {/* Section header with stamp */}
+        <motion.div
+          initial={{ opacity: 0, y: -20, rotate: -5 }}
+          animate={{ opacity: 1, y: 0, rotate: 0 }}
+          transition={{ type: 'spring', stiffness: 80, damping: 10 }}
+          className="flex flex-col items-center gap-3"
+        >
+          <h2 className="font-script text-4xl sm:text-5xl text-blush-600">
+            {data.emoji} {data.title}
+          </h2>
+          <TravelStamp text={data.stamp} />
+        </motion.div>
+
+        {/* Photo grid */}
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 w-full">
+          {data.photos.map((photo, i) => {
+            const isVisible = visibleCount > i;
+            const rotation = (i % 2 === 0 ? -1 : 1) * (2 + (i % 3));
+            const tapeColor = TRAVEL_TAPE_COLORS[i % TRAVEL_TAPE_COLORS.length];
+            const tapePos = TRAVEL_TAPE_POSITIONS[i % TRAVEL_TAPE_POSITIONS.length];
+
+            return (
+              <AnimatePresence key={i}>
+                {isVisible && (
+                  <motion.div
+                    initial={{ opacity: 0, x: i % 2 === 0 ? -50 : 50, y: -15, rotate: rotation - 8 }}
+                    animate={{ opacity: 1, x: 0, y: 0, rotate: rotation }}
+                    transition={{ type: 'spring', stiffness: 80, damping: 10 }}
+                  >
+                    <motion.div
+                      animate={{ rotate: [rotation, rotation - 1, rotation, rotation + 1, rotation] }}
+                      transition={{
+                        duration: 3 + (i % 3),
+                        repeat: Infinity,
+                        ease: 'easeInOut',
+                        delay: i * 0.1,
+                      }}
+                    >
+                      <Polaroid
+                        caption={photo.caption}
+                        rotation={rotation}
+                        tape={tapeColor}
+                        tapePosition={tapePos}
+                        className="w-full"
+                      >
+                        <PhotoPlaceholder
+                          label={photo.label}
+                          aspect={photo.aspect}
+                        />
+                      </Polaroid>
+                    </motion.div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            );
+          })}
+        </div>
+
+        {allDone && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ type: 'spring', stiffness: 100, damping: 10 }}
+            className="flex justify-center mt-2"
+          >
+            {section === 'puri' ? (
+              <NextButton onClick={onNext} label="Next: Pondicherry →" />
+            ) : (
+              <NextButton onClick={onNext} label="Back to gifts 🎁" />
+            )}
+          </motion.div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ─── Travel SVG Components ─────────────────────────────────────────
+
+function Suitcase({ open }: { open: boolean }) {
+  return (
+    <div className="relative" style={{ width: 140, height: 130 }}>
+      <svg viewBox="0 0 140 130" width="140" height="130" fill="none">
+        {/* Handle */}
+        <path d="M52 22 Q52 10 70 10 Q88 10 88 22" stroke="#2a1d15" strokeWidth="3" strokeLinecap="round" fill="none" />
+        {/* Suitcase body */}
+        <rect x="22" y="22" width="96" height="95" rx="8" fill="#d6a04f" stroke="#2a1d15" strokeWidth="2.5" />
+        {/* Lid line */}
+        <line x1="22" y1="48" x2="118" y2="48" stroke="#2a1d15" strokeWidth="2" strokeDasharray="4 3" />
+        {/* Stickers */}
+        <circle cx="40" cy="38" r="6" fill="#f8b8cd" stroke="#2a1d15" strokeWidth="1.5" opacity="0.8" />
+        <circle cx="100" cy="38" r="6" fill="#5d3a7a" stroke="#2a1d15" strokeWidth="1.5" opacity="0.7" />
+        {/* Latches */}
+        <rect x="30" y="44" width="8" height="8" rx="2" fill="#2a1d15" opacity="0.6" />
+        <rect x="102" y="44" width="8" height="8" rx="2" fill="#2a1d15" opacity="0.6" />
+      </svg>
+
+      {/* Open lid with contents */}
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0, y: 10 }}
+            animate={{ opacity: 1, scale: 1, y: -30 }}
+            transition={{ type: 'spring', stiffness: 100, damping: 8 }}
+            className="absolute left-1/2 -translate-x-1/2 -top-2"
+            style={{ width: 120, height: 80 }}
+          >
+            {/* Airplane */}
+            <motion.div
+              animate={{ x: [-10, 30, -10], y: [0, -8, 0], rotate: [-5, 10, -5] }}
+              transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+              className="absolute left-2 top-0"
+            >
+              <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                <path d="M2 16 L28 8 L24 16 L28 24 Z" fill="#5d3a7a" stroke="#2a1d15" strokeWidth="1.5" strokeLinejoin="round" />
+                <path d="M10 16 L18 12 L18 20 Z" fill="#f8b8cd" stroke="#2a1d15" strokeWidth="1" />
+              </svg>
+            </motion.div>
+            {/* Hearts */}
+            <motion.div
+              animate={{ y: [0, -6, 0], opacity: [0.5, 1, 0.5] }}
+              transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+              className="absolute right-4 top-2"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="#e8617e">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+              </svg>
+            </motion.div>
+            {/* Star doodle */}
+            <motion.div
+              animate={{ rotate: [0, 15, 0], scale: [1, 1.1, 1] }}
+              transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
+              className="absolute left-1/2 -translate-x-1/2 bottom-0"
+            >
+              <svg width="24" height="24" viewBox="0 0 30 30" fill="none" stroke="#e8617e" strokeWidth="1.5">
+                <path d="M15 5 L17 12 L24 12 L18 16 L20 23 L15 19 L10 23 L12 16 L6 12 L13 12 Z" fill="#f8b8cd" fillOpacity="0.4" />
+              </svg>
+            </motion.div>
+            {/* Compass */}
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 6, repeat: Infinity, ease: 'linear' }}
+              className="absolute right-0 bottom-1"
+            >
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2a1d15" strokeWidth="1.5">
+                <circle cx="12" cy="12" r="10" fill="#fdf8ee" />
+                <path d="M12 6 L14 12 L12 18 L10 12 Z" fill="#e8617e" />
+              </svg>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+function TravelStamp({ text }: { text: string }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.5, rotate: -12 }}
+      animate={{ opacity: 1, scale: 1, rotate: -6 }}
+      transition={{ type: 'spring', stiffness: 120, damping: 8, delay: 0.3 }}
+      className="relative inline-block"
+    >
+      <div className="px-4 py-2 border-2 border-blush-500 border-dashed rounded-sm bg-cream-100/60">
+        <p className="font-hand text-sm text-blush-600 tracking-wider uppercase">{text}</p>
+      </div>
+    </motion.div>
   );
 }
 

@@ -17,7 +17,7 @@ interface GiftPack {
 
 const GIFTS: GiftPack[] = [
   { id: 1, title: 'Childhood → 20', color: '#f8b8cd', ribbon: '#e8617e', unlocked: true },
-  { id: 2, title: 'Travel', color: '#ecd69b', ribbon: '#d6a04f', unlocked: false },
+  { id: 2, title: 'Travel', color: '#ecd69b', ribbon: '#d6a04f', unlocked: true },
   { id: 3, title: 'Spider-Man T-Shirt', color: '#5d3a7a', ribbon: '#a83b58', unlocked: false },
   { id: 4, title: 'Us ❤️', color: '#fbd5e0', ribbon: '#e8617e', unlocked: false },
   { id: 5, title: 'A Letter 💌', color: '#fde8ee', ribbon: '#5d3a7a', unlocked: false },
