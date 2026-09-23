@@ -42,7 +42,7 @@ export default function Chapter3() {
         )}
 
         {state.scene === 'list' && (
-          <PageTransition key="list" sceneKey="list" variant="scrapbook" className="absolute inset-0">
+          <PageTransition key="list" sceneKey="list" variant="scrapbook" className="absolute inset-0 overflow-y-auto">
             <GiftListScene onOpenGift={(id) => goTo('chapter4', `gift${id}`)} />
           </PageTransition>
         )}
@@ -293,7 +293,7 @@ function GiftListScene({ onOpenGift }: { onOpenGift: (id: number) => void }) {
   }, []);
 
   return (
-    <div className="relative min-h-[100dvh] paper-texture paper-grain flex flex-col items-center justify-center px-4 py-10 overflow-hidden">
+    <div className="relative min-h-[100dvh] paper-texture paper-grain flex flex-col items-center px-4 py-10">
       <HeartAnimation count={4} duration={6} />
 
       <Doodle variant="flower" className="absolute top-6 left-6 animate-float-slow" />
